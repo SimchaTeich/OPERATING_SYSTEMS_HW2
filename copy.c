@@ -9,6 +9,7 @@ int main(int argc, char** argv)
     if (argc < MIN_PARAMETERS)
     {
         printf("%s\n", USAGE);
+        return 1;
     }
 
     return 0;
