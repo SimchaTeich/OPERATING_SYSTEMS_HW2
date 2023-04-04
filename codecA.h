@@ -11,14 +11,6 @@ void codecA(char* str);
 
 
 /*
-checks if char is lower case
-input: char
-iutput: 1 if yes, else 0.
-*/
-int islower(char c);
-
-
-/*
 convert char to be lower case
 input: char
 output: same char in lower case
