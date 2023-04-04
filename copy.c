@@ -125,7 +125,7 @@ int copyFile(char* src_filename, char* dst_filename)
     if(src_file == NULL)
     {
         if(verbose){ printf("%s\n", GENERAL_ERROR_MSG); }
-        return 1;
+        _exit(1);
     }
 
     // open dst file
@@ -134,7 +134,7 @@ int copyFile(char* src_filename, char* dst_filename)
     {
         fclose(src_file);
         if(verbose){ printf("%s\n", GENERAL_ERROR_MSG); }
-        return 1;
+        _exit(1);
     }
 
     // get the file size;
