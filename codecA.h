@@ -6,9 +6,16 @@
 convert all lower case to upper case,
 and all upper case to lower case.
 input: string as char*
-output: 0 for success, else 1
 */
-int codecA(char* str);
+void codecA(char* str);
+
+
+/*
+checks if char is lower case
+input: char
+iutput: 1 if yes, else 0.
+*/
+int islower(char c);
 
 
 /*
