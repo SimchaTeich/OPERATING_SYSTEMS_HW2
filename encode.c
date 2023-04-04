@@ -23,7 +23,6 @@ int main(int argc, char** argv)
     if(argc != NUM_OF_ARGS)
     {
         printUsage();
-        return 1;
     }
 
     // get the main parameters.
@@ -45,7 +44,6 @@ int main(int argc, char** argv)
     else
     {
         printUsage();
-        return 1;
     }
     
 
