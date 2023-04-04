@@ -53,10 +53,12 @@ int main(int argc, char** argv)
 }
 
 
+/*
+print the usage of this program
+*/
 void printUsage()
 {
     printf("%s\n", USAGE);
-    _exit(1);
 }
 
 
