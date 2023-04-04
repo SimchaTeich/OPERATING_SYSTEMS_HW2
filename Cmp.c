@@ -5,12 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-
 int ignoreCase(char a,char b);
-int compare_tow_BFiles(FILE* f1,FILE* f2 );
-
-
+int compare_tow_BFiles(FILE *f1,FILE *f2 );
 
 int main(int argc ,char *argv[])
 {
@@ -48,12 +44,12 @@ int ignoreCase(char a,char b)
         return -1;
 }
 
-int compare_tow_BFiles(FILE* f1,FILE* f2 )
+int compare_tow_BFiles(FILE *f1,FILE *f2 )
 {
    char ch0,ch1;
    int check;
 
-    while ((ch0=fgetc(f1))!=EOF  && (ch1=fgetc(f2))!=EOF)
+    while ((ch0=fgetc(f1))!=EOF)  && (ch1=fgetc(f2))!=EOF))
     {
         // in this condition need to think again if can to use "ignoreCase"
        // just need define "-i" flag or don't care about this
