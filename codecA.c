@@ -1,7 +1,6 @@
 #include "codecA.h"
 #include <string.h>
 #include <ctype.h> // islower
-#include <stdio.h>
 
 
 void codecA(char* str)
