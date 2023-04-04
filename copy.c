@@ -3,6 +3,9 @@
 #include <unistd.h> // not working in windous! this is for access().
 
 #define USAGE "usage: <file1> <file2> [-v] [-f]"
+#define SUCCESS_MSG "success"
+#define TERGET_ERROR_MSG "target file exist"
+#define GENERAL_ERROR_MSG "general failure"
 #define VERBOSE_FLAG "-v"
 #define FORCE_FLAG "-f"
 #define MIN_PARAMETERS 3 // ./copy <file1> <file2>
@@ -15,9 +18,11 @@
 int verbose = FALSE;
 int force = FALSE;
 
+// functions
 int flagIsOn(int argc, char** argv, const char* flag);
 int stringsAreEquals(const char* str1, const char* str2);
 int fileIsExist(char* filename);
+int copyFile(char* src_filename, char* dst_filename);
 
 
 int main(int argc, char** argv)
@@ -42,12 +47,15 @@ int main(int argc, char** argv)
     // if force flag is off.
     if(fileIsExist(dst_filename) && !force)
     {
-        if(verbose){ printf("target file exist\n"); }
+        if(verbose){ printf("%s\n", TERGET_ERROR_MSG); }
         return 1;
     }
 
+    // copy src file to dst file.
+    copyFile(src_filename, dst_filename);
 
-    if (verbose) { printf("success\n"); }
+
+    if (verbose) { printf("%s\n", SUCCESS_MSG); }
     return 0;
 }
 
@@ -99,4 +107,50 @@ https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file
 int fileIsExist(char* filename)
 {
     return access(filename, F_OK) == 0 ? TRUE : FALSE; 
+}
+
+
+/*
+copy content of src file to dst file (binary mode)
+input: two file names as char*
+output: 0 for success, else 1
+*/
+int copyFile(char* src_filename, char* dst_filename)
+{
+    size_t file_size = 0;
+    char byte[1] = {0};
+
+    // open src file
+    FILE* src_file = fopen(src_filename, "rb");
+    if(src_file == NULL)
+    {
+        if(verbose){ printf("%s\n", GENERAL_ERROR_MSG); }
+        return 1;
+    }
+
+    // open dst file
+    FILE* dst_file = fopen(dst_filename, "wb");
+    if(dst_file == NULL)
+    {
+        fclose(src_file);
+        if(verbose){ printf("%s\n", GENERAL_ERROR_MSG); }
+        return 1;
+    }
+
+    // get the file size;
+    fseek(src_file, 0, SEEK_END);
+    file_size = ftell(src_file);
+    fseek(src_file, 0, SEEK_SET);
+
+    // copy the file.
+    for(size_t i = 0; i < file_size; i++)
+    {
+        fread(byte, sizeof(char), 1, src_file);
+        fwrite(byte, sizeof(char), 1, dst_file);
+    }
+
+    fclose(src_file);
+    fclose(dst_file);
+
+    return 0;
 }
