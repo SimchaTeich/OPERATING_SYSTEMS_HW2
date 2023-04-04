@@ -3,6 +3,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #define USAGE "usage: <file1> <file2> [-v] [-i]"
 #define MIN_PARAMETERS 3 // ./copy <file1> <file2>
@@ -40,14 +41,14 @@ int main(int argc, char *argv[])
         {
             printf("\n Error in opening file or file doesnt exist%s %d", argv[1], 1);
             fclose(file);
-            _exist(1); // FAIL
+            exit(1); // FAIL
         }
         file1 = fopen(argv[2], "rb");
         if (file1 == NULL)
         {
             printf("\n Error in opening file or file doesnt exist%s %d", argv[2], 1);
             fclose(file1);
-            _exist(1); // FAIL
+            exit(1); // FAIL
         }
 
         // update globals about the flag status.
