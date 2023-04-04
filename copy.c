@@ -38,10 +38,9 @@ int main(int argc, char** argv)
 
 
 /*
-check if at least one argument
-is the verbose flag
-input: argc and argv main parameters.
-output: 1 if '-v' is there, else 0.
+check if at least one argument is a flag.
+input: argc and argv main parameters, and flag.
+output: 1 if flag was found, else 0.
 */
 int flagIsOn(int argc, char** argv, const char* flag)
 {
@@ -59,9 +58,9 @@ int flagIsOn(int argc, char** argv, const char* flag)
 
 
 /*
-check if char* is the '-v' flag.
-input: flag from main parameters.
-output: 1 if it '-v', else 0.
+check if two strings (char*) are equals
+input: two char*
+output: 1 if strings are equals, else 0.
 */
 int stringsAreEquals(const char* str1, const char* str2)
 {
@@ -73,4 +72,3 @@ int stringsAreEquals(const char* str1, const char* str2)
 
     return FALSE;
 }
-
