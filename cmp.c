@@ -17,7 +17,10 @@ int verbose = FALSE;
 int ignore = FALSE;
 // function in use
 int ignoreCase(char a, char b);
-int compare_tow_BFiles(FILE *f1, FILE *f2);
+int compare_tow_Icase_BFiles(FILE *f1, FILE *f2);
+int compare_tow_Vcase_BFiles(FILE *f1, FILE *f2);
+int flagIsOn(int argc, char **argv, const char *flag);
+int stringsAreEquals(const char *str1, const char *str2);
 
 int main(int argc, char *argv[])
 {
@@ -91,7 +94,6 @@ int ignoreCase(char a, char b)
     }
     return -1;
 }
-
 int compare_tow_Icase_BFiles(FILE *f1, FILE *f2)
 {
     char ch0, ch1;
@@ -143,6 +145,21 @@ int compare_tow_Vcase_BFiles(FILE *f1, FILE *f2)
     fclose(f1);
     fclose(f2);
     return check;
+}
+/*
+check if two strings (char*) are equals
+input: two char*
+output: 1 if strings are equals, else 0.
+*/
+int stringsAreEquals(const char *str1, const char *str2)
+{
+    if (strlen(str1) == strlen(str2) &&
+        strcmp(str1, str2) == 0)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
 }
 /*
 check if at least one argument is a flag.
