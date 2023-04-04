@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+
 #define USAGE "usage: <file1> <file2> [-v] [-i]"
 #define MIN_PARAMETERS 3 // ./copy <file1> <file2>
 #define VERBOSE_FLAG "-v"
@@ -13,6 +15,8 @@
 #define FALSE !TRUE
 #define NUM_OF_PARAMS_WITH_ONE_FLAGS 4
 #define NUM_OF_PARAMS_WITH_TWO_FLAGS 5
+
+
 // globals
 int verbose = FALSE;
 int ignore = FALSE;
@@ -79,6 +83,8 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
+
 /*
  * “ignore case” so “AAA” and “aaa” meaning equals
  */
@@ -95,6 +101,8 @@ int ignoreCase(char a, char b)
     }
     return -1;
 }
+
+
 int compare_tow_Icase_BFiles(FILE *f1, FILE *f2)
 {
     char ch0, ch1;
@@ -129,7 +137,7 @@ int compare_tow_Vcase_BFiles(FILE *f1, FILE *f2)
 
     while (((ch0 = fgetc(f1)) != EOF) && ((ch1 = fgetc(f2)) != EOF))
     {
-        if ((ch0 == ch1))
+        if (ch0 == ch1)
         {
             // if equal just continue until arrive to end of file
             check = 1;
@@ -147,6 +155,8 @@ int compare_tow_Vcase_BFiles(FILE *f1, FILE *f2)
     fclose(f2);
     return check;
 }
+
+
 /*
 check if two strings (char*) are equals
 input: two char*
@@ -162,6 +172,8 @@ int stringsAreEquals(const char *str1, const char *str2)
 
     return FALSE;
 }
+
+
 /*
 check if at least one argument is a flag.
 input: argc and argv main parameters, and flag.
