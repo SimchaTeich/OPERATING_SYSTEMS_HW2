@@ -1,6 +1,7 @@
 #include "codecA.h"
 #include <string.h>
 #include <ctype.h> // islower
+#include <stdio.h>
 
 
 void codecA(char* str)
@@ -9,7 +10,7 @@ void codecA(char* str)
     for(size_t i = 0; i < len; i++)
     {
         if(islower((int)str[i])){ str[i] = upper(str[i]); }
-        else{ str[i] = lower(str[i]); }
+        else { str[i] = lower(str[i]); }
     }
 }
 
