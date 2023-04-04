@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h> // not working in windous! this is for access().
 
 #define USAGE "usage: <file1> <file2> [-v] [-f]"
 #define VERBOSE_FLAG "-v"
@@ -16,23 +17,37 @@ int force = FALSE;
 
 int flagIsOn(int argc, char** argv, const char* flag);
 int stringsAreEquals(const char* str1, const char* str2);
+int fileIsExist(char* filename);
 
 
 int main(int argc, char** argv)
 {
+    char* src_filename = NULL;
+    char* dst_filename = NULL;
+
     if (argc < MIN_PARAMETERS)
     {
         printf("%s\n", USAGE);
         return 1;
     }
 
+    src_filename = argv[1];
+    dst_filename = argv[2];
+
+    // update globals about the flag status.
     verbose = flagIsOn(argc, argv, VERBOSE_FLAG);
     force = flagIsOn(argc, argv, FORCE_FLAG);
 
-    // check (delete it later..)
-    printf("verbose is %s\n", verbose ? "on" : "off");
-    printf("force is %s\n", force ? "on" : "off");
+    // exit if destination file is not exist and
+    // if force flag is off.
+    if(fileIsExist(dst_filename) && !force)
+    {
+        if(verbose){ printf("target file exist\n"); }
+        return 1;
+    }
 
+
+    if (verbose) { printf("success\n"); }
     return 0;
 }
 
@@ -71,4 +86,17 @@ int stringsAreEquals(const char* str1, const char* str2)
     }
 
     return FALSE;
+}
+
+
+/*
+check if file is exist.
+input: file name as char*
+output: 1 for yes, else 0.
+
+https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
+*/
+int fileIsExist(char* filename)
+{
+    return access(filename, F_OK) == 0 ? TRUE : FALSE; 
 }
