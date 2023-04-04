@@ -13,7 +13,7 @@ int verbose = FALSE;
 int force = FALSE;
 
 
-int verboseIsOn(const char* flag);
+int isVerboseFlag(const char* flag);
 
 
 int main(int argc, char** argv)
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 
     if(argc > MIN_PARAMETERS)
     {
-        verbose = verboseIsOn(argv[3]);
+        verbose = isVerboseFlag(argv[3]);
         printf("verbose is %s\n", verbose ? "on" : "off");
     }
     return 0;
@@ -34,11 +34,11 @@ int main(int argc, char** argv)
 
 
 /*
-check if char* is the '-v' flag
+check if char* is the '-v' flag.
 input: flag from main parameters.
 output: 1 if it '-v', else 0.
 */
-int verboseIsOn(const char* flag)
+int isVerboseFlag(const char* flag)
 {
     if(strlen(VERBOSE_FLAG) == strlen(flag) &&
     strcmp(VERBOSE_FLAG, flag) == 0)
