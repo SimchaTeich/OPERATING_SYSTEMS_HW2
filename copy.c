@@ -14,11 +14,8 @@
 int verbose = FALSE;
 int force = FALSE;
 
-
-int verboseFlagIsOn(int argc, char** argv);
-int forceFlagIsOn(int argc, char** argv);
-int isVerboseFlag(const char* flag);
-int isForceFlag(const char* flag);
+int flagIsOn(int argc, char** argv, const char* flag);
+int stringsAreEquals(const char* str1, const char* str2);
 
 
 int main(int argc, char** argv)
@@ -29,8 +26,8 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    verbose = verboseFlagIsOn(argc, argv);
-    force = forceFlagIsOn(argc, argv);
+    verbose = flagIsOn(argc, argv, VERBOSE_FLAG);
+    force = flagIsOn(argc, argv, FORCE_FLAG);
 
     // check (delete it later..)
     printf("verbose is %s\n", verbose ? "on" : "off");
@@ -46,36 +43,15 @@ is the verbose flag
 input: argc and argv main parameters.
 output: 1 if '-v' is there, else 0.
 */
-int verboseFlagIsOn(int argc, char** argv)
+int flagIsOn(int argc, char** argv, const char* flag)
 {
     if (argc == NUM_OF_PARAMS_WITH_ONE_FLAGS)
     {
-        return isVerboseFlag(argv[3]);
+        return stringsAreEquals(argv[3], flag);
     }
     else if(argc == NUM_OF_PARAMS_WITH_TWO_FLAGS)
     {
-        return (isVerboseFlag(argv[3]) || isVerboseFlag(argv[4]));
-    }
-
-    return FALSE;
-}
-
-
-/*
-check if at least one argument
-is the force flag
-input: argc and argv main parameters.
-output: 1 if '-f' is there, else 0.
-*/
-int forceFlagIsOn(int argc, char** argv)
-{
-    if (argc == NUM_OF_PARAMS_WITH_ONE_FLAGS)
-    {
-        return isForceFlag(argv[3]);
-    }
-    else if(argc == NUM_OF_PARAMS_WITH_TWO_FLAGS)
-    {
-        return (isForceFlag(argv[3]) || isForceFlag(argv[4]));
+        return (stringsAreEquals(argv[3], flag) || stringsAreEquals(argv[4], flag));
     }
 
     return FALSE;
@@ -87,10 +63,10 @@ check if char* is the '-v' flag.
 input: flag from main parameters.
 output: 1 if it '-v', else 0.
 */
-int isVerboseFlag(const char* flag)
+int stringsAreEquals(const char* str1, const char* str2)
 {
-    if(strlen(VERBOSE_FLAG) == strlen(flag) &&
-    strcmp(VERBOSE_FLAG, flag) == 0)
+    if(strlen(str1) == strlen(str2) &&
+    strcmp(str1, str2) == 0)
     {
         return TRUE;
     }
@@ -98,19 +74,3 @@ int isVerboseFlag(const char* flag)
     return FALSE;
 }
 
-
-/*
-check if char* is the '-f' flag.
-input: flag from main parameters.
-output: 1 if it '-f', else 0.
-*/
-int isForceFlag(const char* flag)
-{
-    if(strlen(FORCE_FLAG) == strlen(flag) &&
-    strcmp(FORCE_FLAG, flag) == 0)
-    {
-        return TRUE;
-    }
-
-    return FALSE;
-}
