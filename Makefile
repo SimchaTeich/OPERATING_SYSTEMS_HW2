@@ -14,8 +14,8 @@ codecB: codecB.h codecB.c
 	clang-14 -o libcodecB.so -shared -fPIC codecB.c
 
 
-encode: encode.c
-	clang-14 encode.c -L . -l codecA codecB -o encode
+encode: encode.c codecA #codecB
+	clang-14 encode.c -L . -l codecA -o encode  #clang-14 encode.c -L . -l codecA codecB -o encode
 	export LD_LIBRARY_PATH=.
 
 
@@ -31,4 +31,4 @@ testcodecA: codecA
 
 
 clean:
-	rm cmp copy libcodecA.so Tests/Test_codecA
+	rm cmp copy libcodecA.so encode decode Tests/Test_codecA
