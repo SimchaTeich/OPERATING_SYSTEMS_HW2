@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h> // // not working in windous! this is for _exit(1)
+#include <unistd.h> // not working in windous! this is for _exit(1)
 #include "codecA.h"
-//#include "codecB.h"
+#include "codecB.h"
 
 #define USAGE "usage: encode <codec> <message>"
 #define NUM_OF_ARGS 3
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     // run code B on message
     else if(stringsAreEquals(codec, CODEC_B))
     {
-        //codecB(msg);
+        encode(msg);
         printf("%s\n", msg);
     }
     else
