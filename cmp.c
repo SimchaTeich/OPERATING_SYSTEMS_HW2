@@ -62,22 +62,26 @@ int main(int argc, char *argv[])
         {
             if (compare_tow_Vcase_BFiles(file, file1) == 1)
             {
-                printf("\n equal %d", 1);
+                printf("\n equal\n");
+                return 1;
             }
             else
             {
-                printf("\n distinct %d", 0);
+                printf("\n distinct\n");
+                return 0;
             }
         }
         if (ignore)
         {
             if (compare_tow_Icase_BFiles(file, file1) == 1)
             {
-                printf("\n equal %d", 1);
+                printf("\n equal \n");
+                return 1;
             }
             else
             {
-                printf("\n distinct %d", 0);
+                printf("\n distinct \n");
+                return 0;
             }
         }
     }
@@ -110,8 +114,7 @@ int compare_tow_Icase_BFiles(FILE *f1, FILE *f2)
 
     while (((ch0 = fgetc(f1)) != EOF) && ((ch1 = fgetc(f2)) != EOF))
     {
-        // in this condition need to think again if can to use "ignoreCase"
-        // just need define "-i" flag or don't care about this
+        // just need define "-i" 
         if ((ch0 == ch1) || (ignoreCase(ch0, ch1) == 1))
         {
             // if equal just continue until arrive to end of file
