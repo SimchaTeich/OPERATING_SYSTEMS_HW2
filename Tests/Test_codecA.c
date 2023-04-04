@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "codecA.h"
+#include "../codecA.h"
 
 int main()
 {

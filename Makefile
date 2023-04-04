@@ -8,9 +8,9 @@ codecA: codecA.h codecA.c
 	clang-14 -o libcodecA.so -shared -fPIC codecA.c
 
 test: codecA
-	clang-14 Test_codecA.c -L . -l codecA -o Test_codecA
+	clang-14 Tests/Test_codecA.c -L . -l codecA -o Tests/Test_codecA
 	export LD_LIBRARY_PATH=.
-	./Test_codecA
+	./Tests/Test_codecA
 
 clean:
-	rm cmp copy libcodecA.so Test_codecA
+	rm cmp copy libcodecA.so Tests/Test_codecA
