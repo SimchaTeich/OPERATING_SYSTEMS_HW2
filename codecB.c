@@ -22,7 +22,7 @@ void encode(char* str)
 
     for(size_t i = 0; i < len; i++)
     {
-        str[i] = (str[i] - 32 + 3) % 95 + 32;
+        str[i] = (str[i] - CONTROL_CHARTACTERS + 3) % AVAILABLE_CHARS_FROM_KEYBOARD + CONTROL_CHARTACTERS;
     }
 }
 
@@ -33,6 +33,6 @@ void decode(char* str)
 
     for(size_t i = 0; i < len; i++)
     {
-        str[i] = (str[i] - 32 + 92) % 95 + 32;
+        str[i] = (str[i] - CONTROL_CHARTACTERS + 92) % AVAILABLE_CHARS_FROM_KEYBOARD + CONTROL_CHARTACTERS;
     }
 }
