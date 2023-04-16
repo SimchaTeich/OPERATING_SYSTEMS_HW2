@@ -1,18 +1,35 @@
+#include <dlfcn.h>   // dlopen
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h> // not working in windous! this is for _exit(1)
-#include "codecA.h"
-#include "codecB.h"
+#include <unistd.h>  // not working in windous! this is for _exit(1)
+
 
 #define USAGE "usage: encode <codec> <message>"
 #define NUM_OF_ARGS 3
-#define CODEC_A "codecA"
-#define CODEC_B "codecB"
 #define TRUE 1
 #define FALSE !TRUE
 
 void printUsage();
-int stringsAreEquals(const char* str1, const char* str2);
+
+void (*encode)(char *);
+
+
+/*
+load dynamicly the correct libary,
+and then take the function encode from there.
+input: name of libary, "codecA" or "codecB" only.
+*/
+int init_library(char* libname)
+{
+	void *hdl = dlopen(libname, RTLD_LAZY);
+	if (NULL == hdl)
+		return FALSE;
+	encode = (void(*)(char *))dlsym(hdl,"encode");
+	if (NULL == encode)
+		return FALSE;
+	return TRUE;
+}
+
 
 
 int main(int argc, char** argv)
@@ -30,14 +47,7 @@ int main(int argc, char** argv)
     codec = argv[1];
     msg = argv[2];
 
-    // run code A on message
-    if(stringsAreEquals(codec, CODEC_A))
-    {
-        codecA(msg);
-        printf("%s\n", msg);
-    }
-    // run code B on message
-    else if(stringsAreEquals(codec, CODEC_B))
+    if(init_library(codec))
     {
         encode(msg);
         printf("%s\n", msg);
@@ -58,21 +68,4 @@ print the usage of this program
 void printUsage()
 {
     printf("%s\n", USAGE);
-}
-
-
-/*
-check if two strings (char*) are equals
-input: two char*
-output: 1 if strings are equals, else 0.
-*/
-int stringsAreEquals(const char* str1, const char* str2)
-{
-    if(strlen(str1) == strlen(str2) &&
-    strcmp(str1, str2) == 0)
-    {
-        return TRUE;
-    }
-
-    return FALSE;
 }
