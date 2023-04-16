@@ -15,17 +15,17 @@ codecB: codecB.h codecB.c
 
 
 encode: encode.c codecA codecB
-	gcc encode.c -L . -l codecA -l codecB -o encode
+	gcc encode.c -L. -l codecA -l codecB -o encode
 	export LD_LIBRARY_PATH=.
 
 
 decode: decode.c codecA codecB
-	gcc decode.c -L . -l codecA -l codecB -o decode
+	gcc decode.c -L. -l codecA -l codecB -o decode
 	export LD_LIBRARY_PATH=.
 
 
 testcodecA: codecA
-	gcc Tests/Test_codecA.c -L . -l codecA -o Tests/Test_codecA
+	gcc Tests/Test_codecA.c -L. -l codecA -o Tests/Test_codecA
 	export LD_LIBRARY_PATH=.
 	./Tests/Test_codecA
 
