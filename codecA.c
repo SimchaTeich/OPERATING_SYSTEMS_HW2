@@ -3,7 +3,7 @@
 #include <ctype.h> // islower
 
 
-void codecA(char* str)
+void encode(char* str)
 {
     size_t len = strlen(str);
     for(size_t i = 0; i < len; i++)
@@ -11,6 +11,12 @@ void codecA(char* str)
         if(islower((int)str[i])){ str[i] = upper(str[i]); }
         else { str[i] = lower(str[i]); }
     }
+}
+
+
+void decode(char* str)
+{
+    encode(str);
 }
 
 
