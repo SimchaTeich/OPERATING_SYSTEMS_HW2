@@ -7,10 +7,14 @@
 #include <unistd.h>
 #include <string.h>
 
+//https://stackoverflow.com/questions/3585846/color-text-in-terminal-applications-in-unix
+#define GRN "\x1B[32m"
+#define RED "\x1B[31m"
+#define RESET "\x1B[0m"
 
 void printCtrlCMsg()
 {
-	printf("\nDo you want to kill me?? type \"exit\"..\n");
+	printf(RED "\nDo you want to kill me ha??\n" RESET);
 }
 
 
@@ -26,7 +30,7 @@ int main()
 
 	for(int j = 0; j < 100; j++)
 	{
-	    printf("hello: ");
+	    printf(GRN "stshell$ " RESET);
 	    fgets(command, 1024, stdin);
 	    command[strlen(command) - 1] = '\0'; // replace \n with \0
 
@@ -54,10 +58,7 @@ int main()
 			
 			// run the command
 			execvp(argv[0], argv);
-
-			// waiting unitl commant will done.
-			//wait(NULL);
 	    } 
-		wait(NULL); //   
+		wait(NULL);   
 	}
 }
