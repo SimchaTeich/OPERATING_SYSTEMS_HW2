@@ -24,6 +24,10 @@ decode: decode.c codecA codecB
 	export LD_LIBRARY_PATH=.
 
 
+stshell: stshell.c
+	gcc -o stshell stshell.c
+
+
 testcodecA: codecA
 	gcc Tests/Test_codecA.c -L. -l codecA -o Tests/Test_codecA
 	export LD_LIBRARY_PATH=.
@@ -31,4 +35,4 @@ testcodecA: codecA
 
 
 clean:
-	rm cmp copy libcodecA.so libcodecB.so encode decode Tests/Test_codecA
+	rm cmp copy libcodecA.so libcodecB.so encode decode Tests/Test_codecA stshell
