@@ -7,20 +7,20 @@ copy: copy.c
 
 
 codecA: codecA.h codecA.c
-	gcc -o libcodecA.so -shared -fPIC codecA.c
+	gcc -o codecA -shared -fPIC codecA.c
 
 
 codecB: codecB.h codecB.c
-	gcc -o libcodecB.so -shared -fPIC codecB.c
+	gcc -o codecB -shared -fPIC codecB.c
 
 
 encode: encode.c codecA codecB
-	gcc encode.c -L. -l codecA -l codecB -o encode
+	gcc encode.c -L. codecA codecB -o encode
 	export LD_LIBRARY_PATH=.
 
 
 decode: decode.c codecA codecB
-	gcc decode.c -L. -l codecA -l codecB -o decode
+	gcc decode.c -L. codecA codecB -o decode
 	export LD_LIBRARY_PATH=.
 
 
@@ -35,4 +35,4 @@ testcodecA: codecA
 
 
 clean:
-	rm cmp copy libcodecA.so libcodecB.so encode decode Tests/Test_codecA stshell
+	rm cmp copy codecA codecB encode decode Tests/Test_codecA stshell
