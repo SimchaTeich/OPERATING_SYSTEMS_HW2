@@ -24,12 +24,13 @@
 void printCtrlCMsg();
 int getCommandType(char** command);
 void regularCommand(char** argv);
-void directCommand(char* command);
+void directCommand(char* command[MAX_ARGS]);
 void doubleDirectCommand(char* command);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
+int numberOfArgs(char** command);
 
 int main()
 {
@@ -70,7 +71,7 @@ int main()
 			regularCommand(commands[0]);
 			break;
 		case DIRECT:
-			//directCommand(saveCommand);
+			directCommand(commands[0]);
 			break;
 		case DOUBLE_DIRECT:
 			//doubleDirectCommand(saveCommand);
@@ -119,42 +120,25 @@ void regularCommand(char** argv)
 }
 
 
-void directCommand(char* command)
+void directCommand(char* command[MAX_ARGS])
 {
 	if (fork() == 0)
 	{
 		// make ^C be a valid option.
 		signal(SIGINT, SIG_DFL);
 
-		char saveCommand[1024];
-		char* cmdName;
-		char* cmdArgs[10];
-		char* dst;
-		int i = 0;
-
-		// save the command
-		strcpy(saveCommand, command);
-		
-		cmdName = strtok(saveCommand, ">");
-		dst = strtok(NULL, ">");
-		cmdName[strlen(cmdName) - 1] = '\0';
-		strcpy(dst, &dst[1]);
-
-		cmdArgs[i] = strtok(cmdName, " ");
-		while(cmdArgs[i] != NULL)
-		{
-			cmdArgs[++i] = strtok(NULL, " ");
-		}
+		char* commandName = command[0];
+		char* dstFileName = command[numberOfArgs(command) - 1];
+		//command[numberOfArgs(command) - 1] = NULL;
+		command[numberOfArgs(command) - 2] = NULL;
 		
 		//change the dst in fd
-		int fileFD = open(dst, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-		close(STDOUT_FILENO);      // close output
+		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+		close(STDOUT_FILENO);          // close output
 		dup2(fileFD, STDOUT_FILENO);   // change output to be the file
-		close(fileFD); // close the old place of dst file in fd
+		close(fileFD);                 // close the old place of dst file in fd
 
-		// run the command
-		execvp(cmdArgs[0], cmdArgs);
-		//close(1);
+		execvp(command[0], command);   // run the command
 	} 
 	wait(NULL);
 }
@@ -177,7 +161,7 @@ void doubleDirectCommand(char* command)
 		strcpy(saveCommand, command);
 		
 		cmdName = strtok(saveCommand, ">>");
-		dst = strtok(NULL, "?>");
+		dst = strtok(NULL, ">>");
 		cmdName[strlen(cmdName) - 1] = '\0';
 		strcpy(dst, &dst[1]);
 
@@ -253,4 +237,13 @@ void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 
 	// 	i++;
 	// }	
+}
+
+
+int numberOfArgs(char** command)
+{
+	int i = 0;
+	for(; i < MAX_ARGS && command[i] != NULL; i++){}
+
+	return i;
 }
