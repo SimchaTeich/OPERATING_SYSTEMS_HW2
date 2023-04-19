@@ -16,11 +16,19 @@
 #define DIRECT 1
 #define DOUBLE_DIRECT 2
 
+#define KB 1024
+#define MAX_COMMANDS 3
+#define MAX_ARGS 10
+#define CRLF "\r\n"
+
 void printCtrlCMsg();
 int getCommandType(char** argv, int items);
 void regularCommand(char** argv);
 void directCommand(char* command);
 void doubleDirectCommand(char* command);
+
+void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
+void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 
 int main()
 {
@@ -30,49 +38,55 @@ int main()
 	char saveCommand[1024];
 	char *token;
 
+	char userInput[KB];
+	char* commands[MAX_COMMANDS][MAX_ARGS] = {NULL};
+
 	// ignoring the ^C
-	signal(SIGINT, printCtrlCMsg);//SIG_IGN);
+	signal(SIGINT, printCtrlCMsg);
 
 	for(int j = 0; j < 100; j++)
 	{
 	    printf(GRN "stshell$ " RESET);
-	    fgets(command, 1024, stdin);
-	    command[strlen(command) - 1] = '\0'; // replace \n with \0
+	    fgets(userInput, KB, stdin);
+	    userInput[strcspn(userInput, "\n")] = 0; // replace \n with \0
+
+		parser(commands, userInput);
+		printCommands(commands);
 
 		// save the command
-		strcpy(saveCommand, command);
+		//strcpy(saveCommand, command);
 
 	    /* parse command line */
-	    i = 0;
-	    token = strtok (command," ");
-	    while (token != NULL)
-	    {
-			argv[i] = token;
-			token = strtok (NULL, " ");
-			i++;
-	    }
-	    argv[i] = NULL;
+	    // i = 0;
+	    // token = strtok (command," ");
+	    // while (token != NULL)
+	    // {
+		// 	argv[i] = token;
+		// 	token = strtok (NULL, " ");
+		// 	i++;
+	    // }
+	    // argv[i] = NULL;
 
 
 	    /* Is command empty */ 
-	    if (argv[0] == NULL){ continue; }
+	    if (commands[0][0] == NULL){ continue; }
 
 		/* Is exit the stshell*/
-		if (strcmp(argv[0], "exit") == 0){ return 0; }
+		if (strcmp(commands[0][0], "exit") == 0){ return 0; }
 
 
-		switch(getCommandType(argv, i))
-		{
-		case REGULAR:
-			regularCommand(argv);
-			break;
-		case DIRECT:
-			directCommand(saveCommand);
-			break;
-		case DOUBLE_DIRECT:
-			doubleDirectCommand(saveCommand);
-			break;	
-		}
+		// switch(getCommandType(argv, i))
+		// {
+		// case REGULAR:
+		// 	regularCommand(argv);
+		// 	break;
+		// case DIRECT:
+		// 	directCommand(saveCommand);
+		// 	break;
+		// case DOUBLE_DIRECT:
+		// 	doubleDirectCommand(saveCommand);
+		// 	break;	
+		// }
 	}
 }
 
@@ -196,4 +210,38 @@ void doubleDirectCommand(char* command)
 		//close(fileFD);
 	} 
 	wait(NULL);
+}
+
+
+void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream)
+{
+	// divide to commands between the pipes (|)
+	commands[0][0] = strtok(stream, "|");
+	for(int i = 1; i < MAX_COMMANDS; i++)
+	{
+		commands[i][0] = strtok(NULL, "|");
+	}
+
+	// divide each command to parameters
+	for(int i = 0; i < MAX_COMMANDS; i++)
+	{
+		commands[i][0] = strtok(commands[i][0], " ");
+		for(int j = 1; j < MAX_ARGS; j++)
+		{
+			commands[i][j] = strtok(NULL, " ");
+		}
+	}
+}
+
+
+void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
+{
+	for(int i = 0; i < MAX_COMMANDS; i++)
+	{
+		for(int j= 0; j < MAX_ARGS; j++)
+		{
+			printf("%s ", commands[i][j]);
+		}
+		printf("\n");
+	}
 }
