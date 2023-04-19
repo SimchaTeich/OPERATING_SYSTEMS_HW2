@@ -25,7 +25,7 @@ void printCtrlCMsg();
 int getCommandType(char** command);
 void regularCommand(char** argv);
 void directCommand(char* command[MAX_ARGS]);
-void doubleDirectCommand(char* command);
+void doubleDirectCommand(char* command[MAX_ARGS]);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
@@ -74,7 +74,7 @@ int main()
 			directCommand(commands[0]);
 			break;
 		case DOUBLE_DIRECT:
-			//doubleDirectCommand(saveCommand);
+			doubleDirectCommand(commands[0]);
 			break;	
 		}
 	}
@@ -127,10 +127,13 @@ void directCommand(char* command[MAX_ARGS])
 		// make ^C be a valid option.
 		signal(SIGINT, SIG_DFL);
 
+		int argsNum = numberOfArgs(command);
 		char* commandName = command[0];
-		char* dstFileName = command[numberOfArgs(command) - 1];
-		//command[numberOfArgs(command) - 1] = NULL;
-		command[numberOfArgs(command) - 2] = NULL;
+		char* dstFileName = command[argsNum - 1];
+		
+		// remove '<' and the dst file name from list.
+		command[argsNum - 1] = NULL;
+		command[argsNum - 2] = NULL;
 		
 		//change the dst in fd
 		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
@@ -144,45 +147,28 @@ void directCommand(char* command[MAX_ARGS])
 }
 
 
-void doubleDirectCommand(char* command)
+void doubleDirectCommand(char* command[MAX_ARGS])
 {
 	if (fork() == 0)
 	{
 		// make ^C be a valid option.
 		signal(SIGINT, SIG_DFL);
 
-		char saveCommand[1024];
-		char* cmdName;
-		char* cmdArgs[10];
-		char* dst;
-		int i = 0;
-
-		// save the command
-		strcpy(saveCommand, command);
+		int argsNum = numberOfArgs(command);
+		char* commandName = command[0];
+		char* dstFileName = command[argsNum - 1];
 		
-		cmdName = strtok(saveCommand, ">>");
-		dst = strtok(NULL, ">>");
-		cmdName[strlen(cmdName) - 1] = '\0';
-		strcpy(dst, &dst[1]);
-
-		cmdArgs[i] = strtok(cmdName, " ");
-		while(cmdArgs[i] != NULL)
-		{
-			cmdArgs[++i] = strtok(NULL, " ");
-		}
+		// remove '<<' and the dst file name from list.
+		command[argsNum - 1] = NULL;
+		command[argsNum - 2] = NULL;
 		
 		//change the dst in fd
-		//change the dst in fd
-		int fileFD = open(dst, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR);
-		close(STDOUT_FILENO);      // close output
+		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		close(STDOUT_FILENO);          // close output
 		dup2(fileFD, STDOUT_FILENO);   // change output to be the file
-		close(fileFD); // close the old place of dst file in fd
+		close(fileFD);                 // close the old place of dst file in fd
 
-		// run the command
-		execvp(cmdArgs[0], cmdArgs);
-		
-		// close the file
-		//close(fileFD);
+		execvp(command[0], command);   // run the command
 	} 
 	wait(NULL);
 }
