@@ -55,7 +55,6 @@ int main()
 
 		// parsering the commands
 		parser(commands, userInput);
-		printCommands(commands);
 
 
 	    /* Is command empty */ 
@@ -128,7 +127,6 @@ void directCommand(char* command[MAX_ARGS])
 		signal(SIGINT, SIG_DFL);
 
 		int argsNum = numberOfArgs(command);
-		char* commandName = command[0];
 		char* dstFileName = command[argsNum - 1];
 		
 		// remove '<' and the dst file name from list.
@@ -155,7 +153,6 @@ void doubleDirectCommand(char* command[MAX_ARGS])
 		signal(SIGINT, SIG_DFL);
 
 		int argsNum = numberOfArgs(command);
-		char* commandName = command[0];
 		char* dstFileName = command[argsNum - 1];
 		
 		// remove '<<' and the dst file name from list.
