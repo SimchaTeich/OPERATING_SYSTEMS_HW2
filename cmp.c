@@ -62,12 +62,12 @@ int main(int argc, char *argv[])
         {
             if (compare_tow_Icase_BFiles(file, file1) == 1)
             {
-                printf("\n equal \n");
+                printf("equal\n");
                 return 1;
             }
             else
             {
-                printf("\n distinct \n");
+                printf("distinct\n");
                 return 0;
             }
         }
@@ -76,12 +76,12 @@ int main(int argc, char *argv[])
         {
             if (compare_tow_Vcase_BFiles(file, file1) == 1)
             {
-                printf("\n equal\n");
+                printf(" equal\n");
                 return 1;
             }
             else
             {
-                printf("\n distinct\n");
+                printf(" distinct\n");
                 return 0;
             }
         }
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
         {
             if (compare_tow_Icase_BFiles(file, file1) == 1)
             {
-                printf("\n equal \n");
+                printf(" equal \n");
                 return 1;
             }
             else
