@@ -24,8 +24,7 @@
 void printCtrlCMsg();
 int getCommandType(char** command);
 void regularCommand(char** argv);
-void directCommand(char* command[MAX_ARGS]);
-void doubleDirectCommand(char* command[MAX_ARGS]);
+void directCommands(char* command[MAX_ARGS], int truncORAppend);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
@@ -64,10 +63,10 @@ int main()
 			regularCommand(commands[0]);
 			break;
 		case DIRECT:
-			directCommand(commands[0]);
+			directCommands(commands[0], O_TRUNC);
 			break;
 		case DOUBLE_DIRECT:
-			doubleDirectCommand(commands[0]);
+			directCommands(commands[0], O_APPEND);
 			break;	
 		}
 	}
@@ -113,7 +112,7 @@ void regularCommand(char** argv)
 }
 
 
-void directCommand(char* command[MAX_ARGS])
+void directCommands(char* command[MAX_ARGS], int truncORAppend)
 {
 	if (fork() == 0)
 	{
@@ -123,38 +122,12 @@ void directCommand(char* command[MAX_ARGS])
 		int argsNum = numberOfArgs(command);
 		char* dstFileName = command[argsNum - 1];
 		
-		// remove '<' and the dst file name from list.
+		// remove the direct sign and the dst file name from list.
 		command[argsNum - 1] = NULL;
 		command[argsNum - 2] = NULL;
 		
 		//change the dst in fd
-		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-		close(STDOUT_FILENO);          // close output
-		dup2(fileFD, STDOUT_FILENO);   // change output to be the file
-		close(fileFD);                 // close the old place of dst file in fd
-
-		execvp(command[0], command);   // run the command
-	} 
-	wait(NULL);
-}
-
-
-void doubleDirectCommand(char* command[MAX_ARGS])
-{
-	if (fork() == 0)
-	{
-		// make ^C be a valid option.
-		signal(SIGINT, SIG_DFL);
-
-		int argsNum = numberOfArgs(command);
-		char* dstFileName = command[argsNum - 1];
-		
-		// remove '<<' and the dst file name from list.
-		command[argsNum - 1] = NULL;
-		command[argsNum - 2] = NULL;
-		
-		//change the dst in fd
-		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		int fileFD = open(dstFileName, O_WRONLY | O_CREAT | truncORAppend, S_IRUSR | S_IWUSR);
 		close(STDOUT_FILENO);          // close output
 		dup2(fileFD, STDOUT_FILENO);   // change output to be the file
 		close(fileFD);                 // close the old place of dst file in fd
