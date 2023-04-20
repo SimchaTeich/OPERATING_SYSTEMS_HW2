@@ -34,12 +34,6 @@ int numberOfArgs(char** command);
 
 int main()
 {
-	int i;
-	char *argv[10];
-	char command[1024];
-	char saveCommand[1024];
-	char *token;
-
 	char userInput[KB];
 	char* commands[MAX_COMMANDS][MAX_ARGS] = {NULL};
 
@@ -49,7 +43,7 @@ int main()
 	for(int j = 0; j < 100; j++)
 	{
 		// get commands from user
-	    printf(GRN "stshell$ " RESET);
+	    printf(GRN "stshell" RESET "$ ");
 	    fgets(userInput, KB, stdin);
 	    userInput[strcspn(userInput, "\n")] = 0; // replace \n with \0
 
