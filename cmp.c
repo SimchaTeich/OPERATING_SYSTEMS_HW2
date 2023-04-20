@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("\n distinct \n");
+                printf(" distinct \n");
                 return 0;
             }
         }
