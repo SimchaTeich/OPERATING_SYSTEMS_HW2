@@ -73,42 +73,9 @@ int main()
 			{
 				// make ^C be a valid option.
 				signal(SIGINT, SIG_DFL);
-
+				
+				/* prepare the pipes before running the commands */
 				handleThePipes(fd_pipe, commands, i);
-				// if(i == 0 && commands[i+1][0] != NULL)
-				// {
-				// 	close(STDOUT_FILENO);
-				// 	dup2(fd_pipe[0][1], STDOUT_FILENO);
-				// 	close(fd_pipe[0][1]);
-				// 	close(fd_pipe[0][0]);
-				// 	close(fd_pipe[1][1]);
-				// 	close(fd_pipe[1][0]);
-				// }
-				// else if(i == 1)
-				// {
-				// 	close(STDIN_FILENO);
-				// 	dup2(fd_pipe[0][0], STDIN_FILENO);
-
-				// 	if(commands[i+1][0] != NULL)
-				// 	{
-				// 		close(STDOUT_FILENO);
-				// 		dup2(fd_pipe[1][1], STDOUT_FILENO);
-				// 	}
-
-				// 	close(fd_pipe[0][1]);
-				// 	close(fd_pipe[0][0]);
-				// 	close(fd_pipe[1][1]);
-				// 	close(fd_pipe[1][0]);
-				// }
-				// else if(i == 2)
-				// {
-				// 	close(STDIN_FILENO);
-				// 	dup2(fd_pipe[1][0], STDIN_FILENO);
-				// 	close(fd_pipe[0][1]);
-				// 	close(fd_pipe[0][0]);
-				// 	close(fd_pipe[1][1]);
-				// 	close(fd_pipe[1][0]);
-				// }
 
 				switch(getCommandType(commands[i]))
 				{
@@ -257,10 +224,6 @@ void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMAN
 	{
 		close(STDOUT_FILENO);
 		dup2(fd_pipes[0][1], STDOUT_FILENO);
-		close(fd_pipes[0][1]);
-		close(fd_pipes[0][0]);
-		close(fd_pipes[1][1]);
-		close(fd_pipes[1][0]);
 	}
 	else if(commandNo == 1)
 	{
@@ -272,19 +235,15 @@ void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMAN
 			close(STDOUT_FILENO);
 			dup2(fd_pipes[1][1], STDOUT_FILENO);
 		}
-
-		close(fd_pipes[0][1]);
-		close(fd_pipes[0][0]);
-		close(fd_pipes[1][1]);
-		close(fd_pipes[1][0]);
 	}
 	else if(commandNo == 2)
 	{
 		close(STDIN_FILENO);
 		dup2(fd_pipes[1][0], STDIN_FILENO);
-		close(fd_pipes[0][1]);
-		close(fd_pipes[0][0]);
-		close(fd_pipes[1][1]);
-		close(fd_pipes[1][0]);
 	}
+
+	close(fd_pipes[0][1]);
+	close(fd_pipes[0][0]);
+	close(fd_pipes[1][1]);
+	close(fd_pipes[1][0]);
 }
