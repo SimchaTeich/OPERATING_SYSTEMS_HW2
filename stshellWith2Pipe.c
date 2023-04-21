@@ -63,11 +63,14 @@ int main()
 		if (strcmp(commands[0][0], "exit") == 0){ return 0; }
 
 		
+		pipe(fd_pipe[0]);
+		pipe(fd_pipe[1]);
 		for(int i = 0; commands[i][0] != NULL; i++)
 		{
 			//if (i == 0) {pipe(fd_pipe[0]);}// close(STDOUT_FILENO);dup2(fd_pipe[0][1], STDOUT_FILENO);}
-			if(i < MAX_COMMANDS-1 && commands[i+1][0] != NULL && pipe(fd_pipe[i]) < 0){ perror("piperror"); }
-			
+			//if(i < MAX_COMMANDS-1 && commands[i+1][0] != NULL && pipe(fd_pipe[i]) < 0){ perror("piperror"); }
+			// pipe(fd_pipe[0]);
+			// pipe(fd_pipe[1]);
 			if(fork()==0)
 			{
 				// make ^C be a valid option.
@@ -78,24 +81,31 @@ int main()
 					//close(fd_pipe[0][0]);
 					close(STDOUT_FILENO);
 					dup2(fd_pipe[0][1], STDOUT_FILENO);
-					close(fd_pipe[0][0]);
 					close(fd_pipe[0][1]);
+					close(fd_pipe[0][0]);
+					close(fd_pipe[1][1]);
+					close(fd_pipe[1][0]);
 				}
 				else if(i == 1)
 				{
 					//close(fd_pipe[0][1]);
 					close(STDIN_FILENO);
 					dup2(fd_pipe[0][0], STDIN_FILENO);
-					close(fd_pipe[0][1]);
-					close(fd_pipe[0][0]);
+					//close(fd_pipe[0][1]);
+					//close(fd_pipe[0][0]);
 
 					if(commands[i+1][0] != NULL)
 					{
 						close(STDOUT_FILENO);
 						dup2(fd_pipe[1][1], STDOUT_FILENO);
-						close(fd_pipe[1][0]);
-						close(fd_pipe[1][1]);
+						//close(fd_pipe[1][0]);
+						//close(fd_pipe[1][1]);
 					}
+
+					close(fd_pipe[0][1]);
+					close(fd_pipe[0][0]);
+					close(fd_pipe[1][1]);
+					close(fd_pipe[1][0]);
 				}
 				else if(i == 2)
 				{
