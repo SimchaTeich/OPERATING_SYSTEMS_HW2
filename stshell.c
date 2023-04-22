@@ -16,10 +16,6 @@
 #define DIRECT 1
 #define DOUBLE_DIRECT 2
 
-#define FIRST_COMMAND 0
-#define SECOND_COMMAND 1
-#define THIRD_COMMAND 2
-
 #define KB 1024
 #define MAX_COMMANDS 3
 #define MAX_ARGS 10
@@ -29,13 +25,13 @@ void printCtrlCMsg();
 int getCommandType(char** command);
 void regularCommand(char** command);
 void directCommands(char** command, int truncORAppend);
-
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void executeCommands(char** command);
 int numberOfArgs(char** command);
 int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo);
+
 
 int main()
 {
@@ -148,6 +144,14 @@ void directCommands(char** command, int truncORAppend)
 }
 
 
+/*
+Parser string of commands and arguments/flags into
+structre of 3d array.
+For example: "ls -all | sort | grep txt"
+will be [["ls", "-all"], ["sort"], ["grep", "txt"]]
+input: pointer to 3d array and string of the full string.
+output: void
+*/
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream)
 {
 	// divide to commands between the pipes (|)
@@ -182,7 +186,7 @@ void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 }
 
 
-void executeCommands(char** command)//(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
+void executeCommands(char** command)
 {
 	switch(getCommandType(command))
 	{
@@ -215,7 +219,6 @@ int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 
 	return i;
 }
-
 
 
 void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo)
