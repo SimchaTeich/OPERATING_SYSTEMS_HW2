@@ -1,9 +1,9 @@
 # OPERATING_SYSTEMS_HW2
 ## Home Work 2 - Shell
-
+### need to run this command first of all in termianl(flavot of Linux):
 <div dir='ltr'>
    
-	need to run this command first of all in termianl(flavot of Linux): export LD_LIBRARY_PATH=.
+	 export LD_LIBRARY_PATH=.
 
 
 </div>
