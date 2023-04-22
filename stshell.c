@@ -214,6 +214,12 @@ void executeCommands(char** command)
 }
 
 
+/*
+counter the number of arguments in command.
+For example: ["ls", "-a"] return 2.
+input: pointer to command
+output: number as explain abouv.
+*/
 int numberOfArgs(char** command)
 {
 	int i = 0;
