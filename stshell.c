@@ -28,11 +28,11 @@
 void printCtrlCMsg();
 int getCommandType(char** command);
 void regularCommand(char** command);
-void directCommands(char* command[MAX_ARGS], int truncORAppend);
+void directCommands(char** command, int truncORAppend);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
-void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
+void executeCommands(char** command);
 int numberOfArgs(char** command);
 int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo);
@@ -80,7 +80,7 @@ int main()
 				handleThePipes(fd_pipe, commandsAmount, i);
 
 				/* run the current command */
-				executeCommands(commands, i);
+				executeCommands(commands[i]);
 			}
 		}
 
@@ -129,7 +129,7 @@ void regularCommand(char** command)
 }
 
 
-void directCommands(char* command[MAX_ARGS], int truncORAppend)
+void directCommands(char** command, int truncORAppend)
 {
 	int argsNum = numberOfArgs(command);
 	char* dstFileName = command[argsNum - 1];
@@ -182,18 +182,18 @@ void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 }
 
 
-void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
+void executeCommands(char** command)//(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
 {
-	switch(getCommandType(commands[commandNo]))
+	switch(getCommandType(command))
 	{
 	case REGULAR:
-		regularCommand(commands[commandNo]);
+		regularCommand(command);
 		break;
 	case DIRECT:
-		directCommands(commands[commandNo], O_TRUNC);
+		directCommands(command, O_TRUNC);
 		break;
 	case DOUBLE_DIRECT:
-		directCommands(commands[commandNo], O_APPEND);
+		directCommands(command, O_APPEND);
 		break;	
 	}
 }
