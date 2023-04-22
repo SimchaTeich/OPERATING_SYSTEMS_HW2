@@ -1,4 +1,4 @@
-all: cmp copy encode decode stshell
+default: cmp copy encode decode stshell
 
 cmp: cmp.c
 	gcc -o cmp cmp.c
