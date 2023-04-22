@@ -35,6 +35,8 @@ void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 int numberOfArgs(char** command);
 
+void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
+
 int main()
 {
 	char userInput[KB];
@@ -63,32 +65,17 @@ int main()
 		if (strcmp(commands[0][0], "exit") == 0){ return 0; }
 
 		
+		pipe(fd_pipe[0]);
+		pipe(fd_pipe[1]);
 		for(int i = 0; commands[i][0] != NULL; i++)
 		{
-			if (i == 0) {pipe(fd_pipe[0]);}// close(STDOUT_FILENO);dup2(fd_pipe[0][1], STDOUT_FILENO);}
-			//if(i < MAX_COMMANDS-1 && commands[i+1][0] != NULL && pipe(fd_pipe[i]) < 0){ perror("piperror"); }
-			
 			if(fork()==0)
 			{
 				// make ^C be a valid option.
 				signal(SIGINT, SIG_DFL);
-
-				if(i == 0 && commands[i+1][0] != NULL)
-				{
-					//close(fd_pipe[0][0]);
-					close(STDOUT_FILENO);
-					dup2(fd_pipe[0][1], STDOUT_FILENO);
-					close(fd_pipe[0][0]);
-					close(fd_pipe[0][1]);
-				}
-				else if(i == 1)
-				{
-					//close(fd_pipe[0][1]);
-					close(STDIN_FILENO);
-					dup2(fd_pipe[0][0], STDIN_FILENO);
-					close(fd_pipe[0][1]);
-					close(fd_pipe[0][0]);
-				}
+				
+				/* prepare the pipes before running the commands */
+				handleThePipes(fd_pipe, commands, i);
 
 				switch(getCommandType(commands[i]))
 				{
@@ -102,15 +89,14 @@ int main()
 					directCommands(commands[i], O_APPEND);
 					break;	
 				}
-				//return 0;
-				//wait(NULL);
 			}
-			//wait(NULL);
 		}
+
 		close(fd_pipe[0][1]);
 		close(fd_pipe[0][0]);
-		//wait(NULL);
-		//wait(NULL);
+		close(fd_pipe[1][1]);
+		close(fd_pipe[1][0]);
+		
 		for(int i = 0; commands[i][0] != NULL; i++)
 		{
 			wait(NULL);
@@ -228,4 +214,36 @@ int numberOfArgs(char** command)
 	for(; i < MAX_ARGS && command[i] != NULL; i++){}
 
 	return i;
+}
+
+
+
+void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
+{
+	if(commandNo == 0 && commands[commandNo+1][0] != NULL)
+	{
+		close(STDOUT_FILENO);
+		dup2(fd_pipes[0][1], STDOUT_FILENO);
+	}
+	else if(commandNo == 1)
+	{
+		close(STDIN_FILENO);
+		dup2(fd_pipes[0][0], STDIN_FILENO);
+
+		if(commands[commandNo+1][0] != NULL)
+		{
+			close(STDOUT_FILENO);
+			dup2(fd_pipes[1][1], STDOUT_FILENO);
+		}
+	}
+	else if(commandNo == 2)
+	{
+		close(STDIN_FILENO);
+		dup2(fd_pipes[1][0], STDIN_FILENO);
+	}
+
+	close(fd_pipes[0][1]);
+	close(fd_pipes[0][0]);
+	close(fd_pipes[1][1]);
+	close(fd_pipes[1][0]);
 }
