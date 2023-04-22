@@ -21,7 +21,17 @@ input: name of libary, "codecA" or "codecB" only.
 */
 int init_library(char* libname)
 {
-	void *hdl = dlopen(libname, RTLD_LAZY);
+    void *hdl = NULL;
+
+    if(strlen(libname, "codecA") == 0)
+    {
+        *hdl = dlopen("libcodecA.so", RTLD_LAZY);
+    }
+    else ifstrlen(libname, "codecB") == 0
+    {
+        *hdl = dlopen("libcodecB.so", RTLD_LAZY);
+    }
+
 	if (NULL == hdl)
 		return FALSE;
 	encode = (void(*)(char *))dlsym(hdl,"encode");
