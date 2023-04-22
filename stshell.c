@@ -34,20 +34,21 @@ void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
 void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
 int numberOfArgs(char** command);
-
-void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
+int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
+void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo);
 
 int main()
 {
 	char userInput[KB];
 	char* commands[MAX_COMMANDS][MAX_ARGS] = {NULL};
 	int fd_pipe[MAX_COMMANDS-1][2];
+	int commandsAmount = 0;
 
 
 	// ignoring the ^C
 	signal(SIGINT, printCtrlCMsg);
 
-	for(int j = 0; j < 100; j++)
+	for(;;)
 	{
 		// get commands from user
 	    printf(GRN "stshell" RESET "$ ");
@@ -56,6 +57,7 @@ int main()
 
 		// parsering the commands
 		parser(commands, userInput);
+		commandsAmount = numberOfCommands(commands);
 
 
 	    /* Is command empty */ 
@@ -67,7 +69,7 @@ int main()
 		
 		pipe(fd_pipe[0]);
 		pipe(fd_pipe[1]);
-		for(int i = 0; commands[i][0] != NULL; i++)
+		for(int i = 0; i < commandsAmount; i++)//commands[i][0] != NULL; i++)
 		{
 			if(fork()==0)
 			{
@@ -75,7 +77,7 @@ int main()
 				signal(SIGINT, SIG_DFL);
 				
 				/* prepare the pipes before running the commands */
-				handleThePipes(fd_pipe, commands, i);
+				handleThePipes(fd_pipe, commandsAmount, i);
 
 				/* run the current command */
 				executeCommands(commands, i);
@@ -206,10 +208,19 @@ int numberOfArgs(char** command)
 }
 
 
-
-void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
+int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 {
-	if(commandNo == 0 && commands[commandNo+1][0] != NULL)
+	int i = 0;
+	for(; i < MAX_COMMANDS && commands[i][0] != NULL; i++);
+
+	return i;
+}
+
+
+
+void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo)
+{
+	if(commandNo == 0 && numberOfCommands > 1)
 	{
 		close(STDOUT_FILENO);
 		dup2(fd_pipes[0][1], STDOUT_FILENO);
@@ -219,7 +230,7 @@ void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMAN
 		close(STDIN_FILENO);
 		dup2(fd_pipes[0][0], STDIN_FILENO);
 
-		if(commands[commandNo+1][0] != NULL)
+		if(numberOfCommands > 2)
 		{
 			close(STDOUT_FILENO);
 			dup2(fd_pipes[1][1], STDOUT_FILENO);
