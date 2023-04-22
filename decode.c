@@ -21,13 +21,15 @@ input: name of libary, "codecA" or "codecB" only.
 */
 int init_library(char* libname)
 {
-	if(strlen(libname, "codecA") == 0)
+    void *hdl = NULL;
+
+	if(strcmp(libname, "codecA") == 0)
     {
-        *hdl = dlopen("libcodecA.so", RTLD_LAZY);
+        hdl = dlopen("libcodecA.so", RTLD_LAZY);
     }
-    else if(strlen(libname, "codecB") == 0)
+    else if(strcmp(libname, "codecB") == 0)
     {
-        *hdl = dlopen("libcodecB.so", RTLD_LAZY);
+        hdl = dlopen("libcodecB.so", RTLD_LAZY);
     }
 
 	if (NULL == hdl)
