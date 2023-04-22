@@ -243,6 +243,11 @@ int numberOfCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 }
 
 
+/*
+Prepre the pipes according to the order of the current command.
+input: pipes array, number of commands and number of current command
+output: void
+*/
 void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], int numberOfCommands, int commandNo)
 {
 	if(commandNo == 0 && numberOfCommands > 1)
