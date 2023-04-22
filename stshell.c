@@ -32,7 +32,7 @@ void directCommands(char* command[MAX_ARGS], int truncORAppend);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
-void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS]);
+void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
 int numberOfArgs(char** command);
 
 void handleThePipes(int fd_pipes[MAX_COMMANDS - 1][2], char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo);
@@ -77,18 +77,8 @@ int main()
 				/* prepare the pipes before running the commands */
 				handleThePipes(fd_pipe, commands, i);
 
-				switch(getCommandType(commands[i]))
-				{
-				case REGULAR:
-					regularCommand(commands[i]);
-					break;
-				case DIRECT:
-					directCommands(commands[i], O_TRUNC);
-					break;
-				case DOUBLE_DIRECT:
-					directCommands(commands[i], O_APPEND);
-					break;	
-				}
+				/* run the current command */
+				executeCommands(commands, i);
 			}
 		}
 
@@ -190,21 +180,20 @@ void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 }
 
 
-void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
+void executeCommands(char* commands[MAX_COMMANDS][MAX_ARGS], int commandNo)
 {
-	// int i = 0;
-	// char* filename;
-	// int* dirrectMode = NULL; // updates to be O_TRUNC or O_APPEND
-
-	// while(i < MAX_COMMANDS && commands[i][0] != NULL)
-	// {
-	// 	if(direct(commands[i], dirrectMode))
-	// 	{
-
-	// 	}
-
-	// 	i++;
-	// }	
+	switch(getCommandType(commands[commandNo]))
+	{
+	case REGULAR:
+		regularCommand(commands[commandNo]);
+		break;
+	case DIRECT:
+		directCommands(commands[commandNo], O_TRUNC);
+		break;
+	case DOUBLE_DIRECT:
+		directCommands(commands[commandNo], O_APPEND);
+		break;	
+	}
 }
 
 
