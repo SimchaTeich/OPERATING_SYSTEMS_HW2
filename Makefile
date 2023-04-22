@@ -37,4 +37,4 @@ testcodecA: codecA
 
 
 clean:
-	rm cmp copy libcodecA.so libcodecB.so encode decode Tests/Test_codecA stshell
+	rm cmp copy libcodecA.so libcodecB.so encode decode stshell
