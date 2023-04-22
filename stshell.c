@@ -27,7 +27,7 @@
 
 void printCtrlCMsg();
 int getCommandType(char** command);
-void regularCommand(char** argv);
+void regularCommand(char** command);
 void directCommands(char* command[MAX_ARGS], int truncORAppend);
 
 void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream);
@@ -122,10 +122,10 @@ int getCommandType(char** command)
 }
 
 
-void regularCommand(char** argv)
+void regularCommand(char** command)
 {
 	// run the command
-	execvp(argv[0], argv);
+	execvp(command[0], command);
 }
 
 
