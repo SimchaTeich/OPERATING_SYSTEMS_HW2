@@ -25,11 +25,11 @@ int init_library(char* libname)
     {
         *hdl = dlopen("libcodecA.so", RTLD_LAZY);
     }
-    else ifstrlen(libname, "codecB") == 0
+    else if(strlen(libname, "codecB") == 0)
     {
         *hdl = dlopen("libcodecB.so", RTLD_LAZY);
     }
-    
+
 	if (NULL == hdl)
 		return FALSE;
 	decode = (void(*)(char *))dlsym(hdl,"decode");
