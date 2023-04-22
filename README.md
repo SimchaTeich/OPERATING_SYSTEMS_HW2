@@ -3,7 +3,7 @@
 
 <div dir='ltr'>
    
-	need to run this command first of all in termianl: export LD_LIBRARY_PATH=.
+	need to run this command first of all in termianl(flavot of Linux): export LD_LIBRARY_PATH=.
 
 
 </div>
