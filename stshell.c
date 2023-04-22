@@ -173,6 +173,11 @@ void parser(char* commands[MAX_COMMANDS][MAX_ARGS], char* stream)
 }
 
 
+/*
+Helper function for printing the parserd commands.
+input: pointer to 3d array of the commands.
+output: void
+*/
 void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 {
 	for(int i = 0; i < MAX_COMMANDS; i++)
