@@ -191,6 +191,12 @@ void printCommands(char* commands[MAX_COMMANDS][MAX_ARGS])
 }
 
 
+/*
+Select the correct option for running command,
+according to the command type (direct or not..)
+input: pointer to command.
+output: void
+*/
 void executeCommands(char** command)
 {
 	switch(getCommandType(command))
