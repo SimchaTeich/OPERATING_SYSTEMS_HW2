@@ -1,5 +1,14 @@
 # OPERATING_SYSTEMS_HW2
 ## Home Work 2 - Shell
+
+<div dir='ltr'>
+   
+	need to run this command first of all in termianl: export LD_LIBRARY_PATH=.
+
+
+</div>
+
+
 ## All Parts:
 
 <div dir='ltr'>
@@ -25,8 +34,7 @@
 </div>
   
 <div dir='ltr'>  
-  //Usage : encode/decode <codec> <message>
-//output: encoded/decoded string
+
 
 </div>
 
