@@ -47,17 +47,17 @@ int main()
 	for(;;)
 	{
 		// get commands from user
-	    printf(GRN "stshell" RESET "$ ");
-	    fgets(userInput, KB, stdin);
-	    userInput[strcspn(userInput, "\n")] = 0; // replace \n with \0
+		printf(GRN "stshell" RESET "$ ");
+		fgets(userInput, KB, stdin);
+		userInput[strcspn(userInput, "\n")] = 0; // replace \n with \0
 
 		// parsering the commands
 		parser(commands, userInput);
 		commandsAmount = numberOfCommands(commands);
 
 
-	    /* Is command empty */ 
-	    if (commands[0][0] == NULL){ continue; }
+		/* Is command empty */ 
+		if (commands[0][0] == NULL){ continue; }
 
 		/* Is exit the stshell*/
 		if (strcmp(commands[0][0], "exit") == 0){ return 0; }
@@ -93,12 +93,21 @@ int main()
 }
 
 
+/*
+Prints the new line for next command.
+*/
 void printCtrlCMsg()
 {
 	printf(RED "\nDo you want to kill me ha??\n" RESET);
 }
 
 
+/*
+Check witch type the command are.
+'type' in this program is '>', '>>' or nothing.
+input: the command. for example: ['ls', '>', 'hey.txt']
+output: int represent the 'type'
+*/
 int getCommandType(char** command)
 {
 	int argIndx = 0;
@@ -118,6 +127,11 @@ int getCommandType(char** command)
 }
 
 
+/*
+Just run command with execcvp.
+input: command
+output: void
+*/
 void regularCommand(char** command)
 {
 	// run the command
@@ -125,6 +139,11 @@ void regularCommand(char** command)
 }
 
 
+/*
+Prepare the FD for commands with '>' or with '>>'.
+input: command with direct
+output: void
+*/
 void directCommands(char** command, int truncORAppend)
 {
 	int argsNum = numberOfArgs(command);
