@@ -1,13 +1,5 @@
 # OPERATING_SYSTEMS_HW2
 ## Home Work 2 - Shell
-### need to run this command first of all in terminal (flavot of Linux):
-<div dir='ltr'>
-   
-	 export LD_LIBRARY_PATH=.
-
-
-</div>
-
 
 ## All Parts:
 
