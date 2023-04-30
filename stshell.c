@@ -21,7 +21,7 @@
 #define MAX_ARGS 10
 #define CRLF "\r\n"
 
-void printCtrlCMsg();
+void printCtrlCMsg(int);
 int getCommandType(char** command);
 void regularCommand(char** command);
 void directCommands(char** command, int truncORAppend);
@@ -43,6 +43,7 @@ int main()
 
 	// ignoring the ^C
 	signal(SIGINT, printCtrlCMsg);
+	//signal(SIGINT, SIG_IGN);
 
 	for(;;)
 	{
@@ -96,9 +97,11 @@ int main()
 /*
 Prints the new line for next command.
 */
-void printCtrlCMsg()
+void printCtrlCMsg(int)
 {
-	printf(RED "\nDo you want to kill me ha??\n" RESET);
+	//signal(SIGINT, printCtrlCMsg);
+	printf(RED "\n Do you want to kill me ha?? \n" RESET);
+	fflush(stdout);
 }
 
 
