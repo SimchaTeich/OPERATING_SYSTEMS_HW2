@@ -32,11 +32,5 @@ stshell: stshell.c
 	gcc -o stshell stshell.c
 
 
-testcodecA: codecA
-	gcc Tests/Test_codecA.c -L. -l codecA -o Tests/Test_codecA
-	export LD_LIBRARY_PATH=.
-	./Tests/Test_codecA
-
-
 clean:
 	rm cmp copy libcodecA.so libcodecB.so encode decode stshell
